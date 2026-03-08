@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'maven'
+    }
+
     stages {
 
         stage('Init') {
@@ -13,17 +17,13 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir('./BinaryCalculatorWebapp/') {
-                    sh 'mvn test'
-                }
+                sh 'mvn test'
             }
         }
 
         stage('Build') {
             steps {
-                dir('./BinaryCalculatorWebapp/') {
-                    sh 'mvn package'
-                }
+                sh 'mvn package'
             }
         }
 
