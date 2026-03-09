@@ -31,17 +31,20 @@ pipeline {
     tools{
         maven 'maven'
     }
-    stages {
-        stage ('test') {
-            steps {
-                sh 'mvn clean test -f ./BinaryCalculatorWebapp/pom.xml'
-            }
+   stage('test') {
+    steps {
+        dir('BinaryCalculatorWebapp') {
+            sh 'mvn clean test'
         }
-        stage('build'){
-            steps{
-                sh 'mvn package -DskipTests -f ./BinaryCalculatorWebapp/ clean package'
-            }
+    }
+}
+        stage('build') {
+    steps {
+        dir('BinaryCalculatorWebapp') {
+            sh 'mvn clean package -DskipTests'
         }
+    }
+}
         stage('containerize'){
             steps{
                 container('gcloud') {   // within the gcloud container
