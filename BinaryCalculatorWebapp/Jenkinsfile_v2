@@ -38,10 +38,10 @@ pipeline {
     }
 }
         stage('build'){
-            steps{
-                sh 'mvn package -DskipTests -f ./BinaryCalculatorWebapp/ clean package'
-            }
-        }
+    steps{
+        sh 'mvn -f BinaryCalculatorWebapp/pom.xml clean package -DskipTests'
+    }
+}
         stage('containerize'){
             steps{
                 container('gcloud') {   // within the gcloud container
