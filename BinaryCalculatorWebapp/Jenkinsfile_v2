@@ -32,12 +32,10 @@ pipeline {
         maven 'maven'
     }
     stages {
-        stage('test') {
-  steps {
-    dir('BinaryCalculatorWebapp') {
-      sh 'mvn clean test'
+       stage('test') {
+    steps {
+        sh 'mvn -f BinaryCalculatorWebapp/pom.xml clean test'
     }
-  }
 }
         stage('build'){
             steps{
