@@ -34,7 +34,7 @@ pipeline {
     stages {
         stage ('test') {
             steps {
-                sh 'mvn clean test -f ./BinaryCalculatorWebapp/pom.xml'
+                sh 'cd BinaryCalculatorWebapp && mvn clean test'
             }
         }
         stage('build'){
