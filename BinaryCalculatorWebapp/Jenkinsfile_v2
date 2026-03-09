@@ -24,11 +24,11 @@ component: ci
 spec:
 containers:
 
-* name: gcloud
+- name: gcloud
   image: google/cloud-sdk:latest
   command:
 
-  * cat
+  - cat
     tty: true
     """
     }
@@ -40,7 +40,6 @@ containers:
 
   stages {
 
-  ```
   stage('test') {
       steps {
           dir('BinaryCalculatorWebapp') {
