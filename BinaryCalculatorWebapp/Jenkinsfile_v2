@@ -1,15 +1,16 @@
 pipeline {
-environment {
-SERVICE_ACCOUNT = credentials('service_account')
-PROJECT = credentials('project_id')
-REPO_PATH = credentials("repo_path")
-APP_NAME = "binarycalculatorwebapp"
-IMAGE_TAG = "$REPO_PATH/$APP_NAME"
-CLUSTER = credentials("cluster_name")
-CLUSTER_ZONE = credentials("cluster_zone")
-}
 
 ```
+environment {
+    SERVICE_ACCOUNT = credentials('service_account')
+    PROJECT = credentials('project_id')
+    REPO_PATH = credentials("repo_path")
+    APP_NAME = "binarycalculatorwebapp"
+    IMAGE_TAG = "$REPO_PATH/$APP_NAME"
+    CLUSTER = credentials("cluster_name")
+    CLUSTER_ZONE = credentials("cluster_zone")
+}
+
 agent {
     kubernetes {
         label 'sample-app'
@@ -73,6 +74,7 @@ containers:
       steps {
           container('gcloud') {
               dir('BinaryCalculatorWebapp') {
+
                   sh 'gcloud auth activate-service-account --key-file $SERVICE_ACCOUNT'
                   sh 'gcloud config set project $PROJECT'
                   sh 'gcloud container clusters get-credentials $CLUSTER --region=$CLUSTER_ZONE'
@@ -80,7 +82,9 @@ containers:
                   script {
                       try {
                           sh 'kubectl delete deployment binarycalculator-deployment'
-                      } catch (Exception e) {}
+                      } catch (Exception e) {
+                          echo "Deployment did not exist"
+                      }
                   }
 
                   sh 'kubectl create deployment binarycalculator-deployment --image $IMAGE_TAG --port=8080'
@@ -93,6 +97,7 @@ containers:
       steps {
           container('gcloud') {
               dir('BinaryCalculatorWebapp') {
+
                   sh 'gcloud auth activate-service-account --key-file $SERVICE_ACCOUNT'
                   sh 'gcloud config set project $PROJECT'
                   sh 'gcloud container clusters get-credentials $CLUSTER --region=$CLUSTER_ZONE'
@@ -100,10 +105,12 @@ containers:
                   script {
                       try {
                           sh 'kubectl expose deployment binarycalculator-deployment --type=LoadBalancer --name=binarycalculator-service'
-                      } catch (Exception e) {}
+                      } catch (Exception e) {
+                          echo "Service already exists"
+                      }
                   }
 
-                  sh "kubectl get service/binarycalculator-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}'"
+                  sh "kubectl get service binarycalculator-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}'"
               }
           }
       }
@@ -111,4 +118,5 @@ containers:
   ```
 
   }
-  }
+
+}
