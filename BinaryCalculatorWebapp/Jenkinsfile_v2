@@ -31,15 +31,18 @@ pipeline {
     tools{
         maven 'maven'
     }
-    stages {
-       stage('test') {
+    stage('test') {
     steps {
-        sh 'mvn -f BinaryCalculatorWebapp/pom.xml clean test'
+        dir('BinaryCalculatorWebapp') {
+            sh 'mvn clean test'
+        }
     }
 }
         stage('build'){
     steps{
-        sh 'mvn -f BinaryCalculatorWebapp/pom.xml clean package -DskipTests'
+        dir('BinaryCalculatorWebapp') {
+            sh 'mvn clean package -DskipTests'
+        }
     }
 }
         stage('containerize'){
